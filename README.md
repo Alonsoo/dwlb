@@ -1,6 +1,7 @@
 <div align="center">
 <h1>dwlb</h1>
 
+My personal fork of [DWLB](https://github.com/kolunmi/dwlb) 
 A fast, feature-complete bar for [dwl](https://github.com/djpohly/dwl).
 
 ![screenshot 1](/screenshot1.png "screenshot 1")
