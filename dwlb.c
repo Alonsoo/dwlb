@@ -397,8 +397,12 @@ draw_frame(Bar *bar)
 	/* Draw on images */
 	uint32_t x = 0;
 	uint32_t y = (bar->height + font->ascent - font->descent) / 2;
-	uint32_t boxs = font->height / 9;
-	uint32_t boxw = font->height / 6 + 2;
+	//uint32_t boxs = font->height / 9;
+	//uint32_t boxw = font->height / 6 + 2;
+	uint32_t boxx;
+
+	uint32_t boxy;
+	uint32_t boxh;
 
 	for (uint32_t i = 0; i < tags_l; i++) {
 		const bool active = bar->mtags & 1 << i;
@@ -411,37 +415,43 @@ draw_frame(Bar *bar)
 		pixman_color_t *fg_color = urgent ? &urgent_fg_color : (active ? &active_fg_color : (occupied ? &occupied_fg_color : &inactive_fg_color));
 		pixman_color_t *bg_color = urgent ? &urgent_bg_color : (active ? &active_bg_color : (occupied ? &occupied_bg_color : &inactive_bg_color));
 		
-		if (!hide_vacant && occupied) {
+		boxx = x;
+		boxy = bar->height;
+		boxh = bar->sel && active ? font->height / 10 + 1 : font->height / 20 + 1;
+		x = draw_text(tags[i], x, y, foreground, foreground_mask, background, fg_color, bg_color,
+			      bar->width, bar->height, bar->textpadding, NULL, 0);
+
+		if (!hide_vacant && occupied && !urgent) {
+		//if (true) {
 			pixman_image_fill_boxes(PIXMAN_OP_SRC, foreground,
 						fg_color, 1, &(pixman_box32_t){
-							.x1 = x + boxs, .x2 = x + boxs + boxw,
-							.y1 = boxs, .y2 = boxs + boxw
+							.x1 = boxx + 1, .x2 = x - 1,
+							.y1 = boxy - boxh, .y2 = boxy
 						});
 			pixman_image_fill_boxes(PIXMAN_OP_SRC, foreground_mask,
 						&(pixman_color_t){0xFFFF,0xFFFF,0xFFFF,0xFFFF},
 						1, &(pixman_box32_t){
-							.x1 = x + boxs, .x2 = x + boxs + boxw,
-							.y1 = boxs, .y2 = boxs + boxw
+							.x1 = boxx + 1, .x2 = x - 1,
+							.y1 = boxy - boxh, .y2 = boxy
 						});
-			if ((!bar->sel || !active) && boxw >= 3) {
-				/* Make box hollow */
-				pixman_image_fill_boxes(PIXMAN_OP_SRC, foreground,
-							&(pixman_color_t){ 0 },
-							1, &(pixman_box32_t){
-								.x1 = x + boxs + 1, .x2 = x + boxs + boxw - 1,
-								.y1 = boxs + 1, .y2 = boxs + boxw - 1
-							});
-				pixman_image_fill_boxes(PIXMAN_OP_SRC, foreground_mask,
-							&(pixman_color_t){ 0 },
-							1, &(pixman_box32_t){
-								.x1 = x + boxs + 1, .x2 = x + boxs + boxw - 1,
-								.y1 = boxs + 1, .y2 = boxs + boxw - 1
-							});
-			}
+			//if ((!bar->sel || !active) && boxw >= 3) {
+			//if (!bar->sel || !active) {
+			//	/* Make box hollow */
+			//	pixman_image_fill_boxes(PIXMAN_OP_SRC, foreground,
+			//				&(pixman_color_t){ 0 },
+			//				1, &(pixman_box32_t){
+			//					.x1 = boxx + 1, .x2 = x - 1,
+			//					.y1 = boxy - boxh + 1, .y2 = boxy - 1
+			//				});
+			//	pixman_image_fill_boxes(PIXMAN_OP_SRC, foreground_mask,
+			//				&(pixman_color_t){ 0 },
+			//				1, &(pixman_box32_t){
+			//					.x1 = boxx + 1, .x2 = x - 1,
+			//					.y1 = boxy - boxh + 1, .y2 = boxy - 1
+			//				});
+			//}
 		}
 		
-		x = draw_text(tags[i], x, y, foreground, foreground_mask, background, fg_color, bg_color,
-			      bar->width, bar->height, bar->textpadding, NULL, 0);
 	}
 	
 	x = draw_text(bar->layout, x, y, foreground, foreground_mask, background,
