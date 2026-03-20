@@ -25,9 +25,12 @@ static bool active_color_title = false;
 // scale
 static uint32_t buffer_scale = 1;
 // font
-static char *fontstr = "monospace:size=12";
+static char *fontstr = "monospace:size=11";
 // tag names
 static char *tags_names[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+
+// import pywal colors
+#include "/home/alonso/.cache/wal/colors-wal-dwlb.h"
 
 // set 16-bit colors for bar
 // use either pixman_color_t struct or HEX_COLOR macro for 8-bit colors
@@ -41,8 +44,5 @@ static char *tags_names[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 //static pixman_color_t urgent_bg_color = HEX_COLOR(0xeeeeeef7);
 //static pixman_color_t middle_bg_color = HEX_COLOR(0x222222f7);
 //static pixman_color_t middle_bg_color_selected = HEX_COLOR(0x222222f7);
-
-// import pywal colors
-#include "/home/alonso/.cache/wal/colors-wal-dwlb.h"
 
 //
